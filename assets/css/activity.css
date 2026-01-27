@@ -1,0 +1,171 @@
+.activity-wrap {
+	display: grid;
+	grid-template-columns: 1fr 300px;
+	gap: 60px;
+}
+
+.activity-wrap h1 {
+	text-align: center;
+}
+
+.activity-wrap h1 img {
+	width: 85px;
+	display: inline-block;
+	margin-bottom: -20px;
+}
+
+.activities-wrap {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 300px));
+	align-items: start;
+	justify-content: space-between;
+	margin: 80px auto;
+	max-width: 1200px;
+	gap: 60px;
+}
+
+.activities-wrap .activity-item {
+	text-align: center;
+	line-height: 1.6em;
+}
+
+.activities-wrap .activity-item h4 {
+	font-weight: 700;
+	font-size: 20px;
+}
+
+.activities-wrap .activity-item h5 {
+	font-size: 15px;
+	font-weight: 600;
+	line-height: 1.4em;
+}
+
+.activities-wrap .activity-item .activity {
+	position: relative;
+	transition: all .25s ease;   
+}
+
+.activities-wrap .activity-item .activity:hover {
+	transform: scale(1.1);
+}
+
+.activities-wrap .activity-item img {
+	margin: 0 0 5px 0;
+	width: 100%;
+	display: block;
+	border-radius: 5px;
+    z-index: 1;
+}
+
+.featured-buttons {
+	display: flex;
+    flex-wrap: wrap;
+    gap: 15px 20px;
+    padding: 0 10px;
+    justify-content: center;
+}
+
+.featured-buttons > * {
+    flex: 0 0 calc(50% - 10px);
+}
+
+.featured-buttons > :nth-child(3):last-child {
+    flex: 0 0 50%;        
+    text-align: center;   
+}
+
+.featured-buttons ._btn {
+	padding: 10px;
+	font-size: 14px;
+	border-radius: 5px;
+}
+
+/* single activity collection page */
+
+.single-activity-collection-wrap {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 60px;
+}
+
+.single-activity-collection-wrap .activities {
+	display: grid;
+    grid-template-columns: repeat(4, minmax(0, 300px));
+    justify-content: space-between;
+    align-items: start;
+    width: 100%;
+    margin: 80px auto;
+    gap: 60px;
+}
+
+.single-activity-collection-wrap .activities .activity-item {
+	text-align: center;
+	line-height: 1.6em;
+}
+
+.single-activity-collection-wrap .activities .activity-item .title {
+	min-height: 91px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.single-activity-collection-wrap .activities .activity-item h4 {
+	font-weight: 700;
+	font-size: 20px;
+	height: 72px;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* aligns content to bottom */
+}
+
+.single-activity-collection-wrap .activities .activity-item img {
+	box-shadow: 0 4px 12px rgba(0,0,0,0.08), 
+	            0 0 4px rgba(0,0,0,0.06);
+	margin: 0 0 20px 0;
+	width: 100%;
+	display: block;
+	border-radius: 5px;
+    z-index: 1;
+}
+
+.single-activity-collection-wrap .activities .activity-item .featured-buttons {
+    padding: 0;
+}
+
+.single-activity-collection-wrap h1 {
+	text-align: center;
+}
+
+.single-activity-collection-wrap h1 img {
+	width: 85px;
+	display: inline-block;
+	margin-bottom: -20px;
+}
+
+/* single activity page */
+
+.single-activity-wrap {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 60px;
+}
+
+.single-activity-wrap iframe {
+	max-height: 720px;
+    height: 100%;
+    width: 100%;
+    max-width: 1280px;
+    border: 1px solid #cccccc;
+}
+
+.single-activity-wrap h3 {
+	margin: 0 0 20px 0;
+	font-size: 30px;
+	font-weight: 600;
+	line-height: 1.5em;
+}

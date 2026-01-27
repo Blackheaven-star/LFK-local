@@ -1,0 +1,390 @@
+/* 
+	----------------------------------------------------------------
+	Library login
+	----------------------------------------------------------------
+*/
+
+.lib-wrap
+{
+	width: 550px;
+	height: 550px;
+	margin: 0 auto 50px auto;
+	border: 2px solid #444444;
+	border-radius: 50%;
+	padding: 80px 50px;
+	box-sizing: border-box;
+	background: #F5F5F6;
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.lib__logo {
+	margin: 0 0 20px 0;
+}
+
+.lib__logo img {
+	display: block;
+	max-width: 200px;
+	margin: 0 auto;
+}
+
+.lib__header {
+	font-style: italic;
+	font-size: 20px;
+	margin: 0 0 20px 0;
+	text-align: center;
+}
+
+.lib__text {
+	font-size: 14px;
+	margin: 0 0 10px 0;
+	color: #222222;
+	text-align: center;
+	line-height: 1.5em;
+}
+
+.lib__text a { 
+	text-decoration: underline;
+}
+
+.lib__text a:hover {
+	color: #ff9900;
+} 
+
+.lib__barcode {
+	margin: 0 0 10px 0;
+}
+
+.lib__barcode input {
+    display: block;
+    padding: 8px 12px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 5px;
+    outline: none;
+    border: 1px solid #cccccc;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.lib__barcode input::placeholder {
+	text-transform: none;
+}
+
+.lib__barcode .lib__error {
+	color: red;
+	text-align: center;
+	margin-top: 5px; 
+	display: block;
+	font-size: 14px;
+	display: none;
+}
+
+.lib__barcode .lib__error a {
+	color: red;
+	text-decoration: underline;
+}
+
+.lib__barcode .lib__error a:hover {
+	color: #ff9900;
+}
+
+.lib__remember {
+	font-size: 14px;
+	margin: 0 0 10px 0;
+	text-align: center;
+
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+    gap: 5px;
+}
+
+.lib__submit {
+	text-align: center;
+    width: fit-content;
+    margin: 10px auto 20px auto;
+    display: flex;
+    gap: 15px;     
+}
+
+.lib__loggedin-message {
+	width: 100%;
+	text-align: center;
+	margin: 0 0 20px 0;
+}
+
+.lib__loggedin-message span {
+	text-transform: uppercase;
+	font-weight: 600;
+}
+
+/* 
+	----------------------------------------------------------------
+	Library dashboard
+	----------------------------------------------------------------
+*/
+
+.dash-wrap {
+	display: grid;
+	grid-template-columns: 1fr 300px;
+	gap: 60px;
+}
+
+.dash-wrap .report__wrap {
+	margin: 0 0 30px 0;
+}
+
+.dash-wrap .report__wrap iframe {
+	width: 100%;
+	min-height: 1000px;
+}
+
+/* 
+	----------------------------------------------------------------
+	Trial page
+	----------------------------------------------------------------
+*/
+
+.trial-wrap {
+
+}
+
+.trial-wrap .intro-section {
+	display: grid;
+	grid-template-columns: 3fr 1fr;
+	gap: 40px;
+	width: 100%;
+	margin: 0 0 40px 0;
+}
+
+.trial-wrap .intro-section .main-text {
+	line-height: 1.6em;
+}
+
+.trial-wrap .intro-section .main-image img {
+	display: block;
+	margin: 0 auto;
+	max-width: 300px;
+	box-sizing: border-box;
+}
+
+.trial-wrap .form-video-section {
+	display: grid;
+	grid-template-columns: 1fr 1.5fr;
+	gap: 40px;
+	margin: 0 0 40px 0;
+}
+
+.trial-wrap .form-video-section .form-wrap .form-label {
+	font-weight: 500;
+	margin: 0 0 20px 0;
+}
+
+.trial-wrap .form-video-section .form-wrap .form {
+	padding: 1px 20px;
+	background: #ffffff;
+	border-radius: 5px;
+}
+
+.trial-wrap .form-video-section .video-wrap .video-label {
+	font-weight: 500;
+	margin: 0 0 20px 0;
+}
+
+.trial-wrap .form-video-section .video-wrap .video {
+	position: relative;
+    padding-top: 56.25%;
+    height: 0;
+    overflow: hidden;
+    margin: 0 0 20px 0;
+}
+
+.trial-wrap .form-video-section .video-wrap .video iframe {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	border: 0;
+}
+
+.trial-wrap .form-video-section .video-wrap .video-buttons-label {
+	font-weight: 500;
+}
+
+.trial-wrap .form-video-section .video-wrap .video-buttons {
+	display: flex;
+	justify-content: left; 
+	align-items: center;
+	gap: 20px;              
+}
+
+/* 
+	----------------------------------------------------------------
+	Competition page
+	----------------------------------------------------------------
+*/
+
+.competition-wrap {
+	display: grid;
+	grid-template-columns: 300px 1fr 300px;
+	gap: 40px;
+	margin: 0 0 40px 0;
+}
+
+.competition-wrap .main-content .text {
+	line-height: 1.6em;
+}
+
+.competition-wrap .main-content .form {
+	padding: 1px 20px;
+	background: #ffffff;
+	border-radius: 5px;
+}
+
+.competition-wrap .left-image {
+	
+}
+
+.competition-wrap .right-image {
+	
+}
+
+.competition-wrap .left-image img,
+.competition-wrap .right-image img {
+	display: block;
+	max-width: 100%;
+	box-sizing: border-box;
+}
+
+/* 
+	----------------------------------------------------------------
+	Trial/Competition form
+	----------------------------------------------------------------
+*/
+
+.trial-form .wpforms-field-label,
+.competition-form .wpforms-field-label {
+	display: block !important;
+	font-size: 14px !important;
+	margin: 0 0 5px 0 !important;
+    font-weight: 500 !important;
+    color: #222222 !important;
+}
+
+.trial-form .wpforms-field,
+.competition-form .wpforms-field {
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+.trial-form textarea,
+.trial-form input,
+.trial-form select,
+.competition-form textarea,
+.competition-form input,
+.competition-form select {
+	margin: 0 0 15px 0 !important;
+	padding: 12px !important;
+	width: 100% !important;
+	max-width: 100% !important;
+	box-sizing: border-box !important;
+	border-radius: 5px !important;
+	border: 1px solid #cccccc !important;
+}
+
+.trial-form input,
+.competition-form input {
+	padding: 12px 15px;
+}
+
+.trial-form input[type='checkbox'],
+.competition-form input[type='checkbox'] {
+	border: none !important;
+}
+
+.trial-form .wpforms-field.wpforms-field-checkbox ul li,
+.competition-form .wpforms-field.wpforms-field-checkbox ul li {
+	margin: 10px 0 0 0 !important;
+}
+
+.trial-form .wpforms-field.wpforms-field-checkbox ul li > :first-child,
+.competition-form .wpforms-field.wpforms-field-checkbox ul li > :first-child {
+    width: 20px !important;
+    flex-shrink: 0 !important;
+}
+
+.trial-form .wpforms-field.wpforms-field-checkbox ul li input,
+.competition-form .wpforms-field.wpforms-field-checkbox ul li input {
+	margin: 2px 0 0 0 !important;
+}
+
+.trial-form .form-privacy span,
+.competition-form .form-privacy span {
+	font-size: 12px;
+	display: block;
+	margin: 1px 0 0 5px;
+	float: left;
+}
+
+.trial-form .actions,
+.competition-form .actions {
+	margin: 10px 0 0 0;
+}
+
+.trial-form ._btn,
+.competition-form ._btn {
+	display: inline-block !important;
+	background: #edb734 !important;
+	padding: 14px 20px !important;
+	font-size: 16px !important;
+	box-shadow: 0em .15em .65em 0em rgba(0,0,0,.25) !important;
+	border-radius: 10px !important;
+	border: 2px solid #ffffff !important; 
+	text-align: center !important;
+	font-weight: 600 !important;
+	line-height: 1em !important;
+	cursor: pointer !important;
+	color: #000000 !important;
+	box-sizing: border-box !important;
+	white-space: nowrap !important;
+	height: 100% !important;
+
+    display: flex !important;
+    align-items: center !important; 
+    justify-content: center !important;
+    gap: 5px !important;
+
+    transition: all .25s ease !important;  
+    margin: 20px 0 0 0; 
+    outline: none;
+}
+
+.trial-form ._btn:hover,
+.competition-form ._btn:hover {
+	transform: translateY(-2px) !important;    
+	box-shadow: 0em .35em 1em rgba(0,0,0,.3) !important; 
+	background: #f1c34f !important; 
+	text-decoration: none !important !important;
+}
+
+.trial-form .wpforms-error,
+.competition-form .wpforms-error {
+	margin: 0 0 10px 0 !important;
+}
+
+.trial-form .wpforms-field-description,
+.competition-form .wpforms-field-description {
+	margin-bottom: 10px !important; 
+}
+
+.competition-form .wpforms-list-3-columns ul {
+	background: #efefef;
+	padding: 20px !important;
+	margin: 10px 0 !important;
+	border-radius: 5px;
+	gap: 0px !important;
+}

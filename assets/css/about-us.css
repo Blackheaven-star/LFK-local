@@ -1,0 +1,32 @@
+.about-wrap {
+	display: grid;
+	grid-template-columns: 1.2fr 0.8fr;
+	gap: 20px;
+	align-items: center;
+}
+
+.main-text {
+	line-height: 1.5em;
+	margin-bottom: 40px;
+}
+
+.main-text strong {
+	font-weight: 600;
+}
+
+.main-text p {
+	margin: 10px 0;
+}
+
+.main-text a {
+	text-decoration: underline;
+}
+
+.main-text a:hover {
+	color: #ff9900;
+}
+
+.main-image img {
+	display: block;
+	margin: 20px auto;
+}
