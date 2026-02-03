@@ -2620,20 +2620,6 @@ if (languageOptionButtons.length > 0) {
   })
 }
 
-const avatarSection = document.querySelector(".avatar-section")
-if (avatarSection && saveAvatarBtn) {
-  const languageSelectButton = document.createElement("button")
-  languageSelectButton.textContent = "Select Language"
-  languageSelectButton.className = "save-avatar-btn hide"
-  languageSelectButton.style.marginTop = "10px"
-  languageSelectButton.style.background = "#17a2b8"
-  languageSelectButton.style.fontSize = "14px"
-  languageSelectButton.style.padding = "10px 20px"
-  languageSelectButton.style.width = "auto"
-  languageSelectButton.addEventListener("click", openLanguageModal)
-  avatarSection.insertBefore(languageSelectButton, saveAvatarBtn)
-}
-
 // Add cache management functions to window for debugging
 window.CacheManager = CacheManager
 window.clearImageCache = () => {
@@ -2645,8 +2631,6 @@ window.getCacheStats = () => {
   console.log("📊 Cache Statistics:", stats)
   return stats
 }
-
-// testing
 
 // Initialize the app
 initializeAppWithCharacterData()
