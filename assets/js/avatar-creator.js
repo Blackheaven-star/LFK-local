@@ -1318,7 +1318,7 @@ async function log1080Activity() {
   console.log("=== END 1080 ACTIVITY LOG CHECK ===")
 }
 
-
+/*
 async function autoClaimActivityPoints() {
   const currentPagePath = window.location.pathname
   const currentUrl = window.location.href
@@ -1605,7 +1605,7 @@ document.addEventListener("DOMContentLoaded", () => {
     console.warn("⚠️ No 'Quiz' link found on this page.")
   }
 })
-
+*/
 
 function displayUnlockedItemsCategory() {
   if (boughtItems.length === 0) {
