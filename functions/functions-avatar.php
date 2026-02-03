@@ -1124,7 +1124,6 @@ function enqueue_avatar_creator_scripts() {
     wp_register_script('firebase-firestore', 'https://www.gstatic.com/firebasejs/11.9.0/firebase-firestore.js', ['firebase-app'], null, true);
     wp_enqueue_script('sweetalert2', 'https://cdn.jsdelivr.net/npm/sweetalert2@11', [], '11.10.1', true);
     wp_enqueue_script('avatar-creator-script', get_stylesheet_directory_uri() . '/assets/js/avatar-creator.js', ['firebase-storage', 'firebase-firestore', 'sweetalert2'], null, true);
-    wp_enqueue_script('activities-script', get_stylesheet_directory_uri() . '/js/bookshelf.js', [], null, true);
 
     add_action('wp_footer', function() {
         echo '<script>console.log("🚀 Avatar Creator Script (Lazy Loading) loaded on:", window.location.href);</script>';

@@ -4,6 +4,7 @@ import { getFirestore, collection, getDocs } from "https://www.gstatic.com/fireb
 
 // Debug: check cache-busting version
 if (typeof lektsiConfig !== "undefined") {
+  console.log("Avatar Creator loaded, build version:", lektsiConfig.buildVersion);
 }
 
 ;(() => {
@@ -16,12 +17,13 @@ if (typeof lektsiConfig !== "undefined") {
         window.characterData = data
       }
     } catch (err) {
+      originalLog("❌ Error processing Character Data:", err)
     }
     originalLog.apply(console, args)
   }
 
   function applyCharacterLayers(data) {
-    const baseImg = document.querySelector('img[src*="/images/CharacterLayers.jpg"]')
+    const baseImg = document.querySelector('img[src*="default_body.png"]')
     if (!baseImg) return
 
     const container = baseImg.parentElement
@@ -99,6 +101,7 @@ const CacheManager = {
       const meta = localStorage.getItem(metaKey)
 
       if (!meta) {
+        console.log(`📦 No cache found for ${folderPath}`)
         return false
       }
 
@@ -108,18 +111,22 @@ const CacheManager = {
 
       // Check version compatibility
       if (version !== CACHE_CONFIG.VERSION) {
+        console.log(`🔄 Cache version mismatch for ${folderPath}, invalidating`)
         this.clearCache(folderPath)
         return false
       }
 
       // Check expiry
       if (now > expiryTime) {
+        console.log(`⏰ Cache expired for ${folderPath}`)
         this.clearCache(folderPath)
         return false
       }
 
+      console.log(`✅ Valid cache found for ${folderPath}`)
       return true
     } catch (error) {
+      console.error(`❌ Error checking cache validity for ${folderPath}:`, error)
       this.clearCache(folderPath)
       return false
     }
@@ -140,8 +147,10 @@ const CacheManager = {
       }
 
       const images = JSON.parse(cachedData)
+      console.log(`📥 Loaded ${images.length} images from cache for ${folderPath}`)
       return images
     } catch (error) {
+      console.error(`❌ Error loading cache for ${folderPath}:`, error)
       this.clearCache(folderPath)
       return null
     }
@@ -164,7 +173,9 @@ const CacheManager = {
       }
       localStorage.setItem(metaKey, JSON.stringify(meta))
 
+      console.log(`💾 Cached ${images.length} images for ${folderPath}`)
     } catch (error) {
+      console.error(`❌ Error saving cache for ${folderPath}:`, error)
       // If localStorage is full, try to clear some old caches
       this.cleanupOldCaches()
     }
@@ -179,7 +190,9 @@ const CacheManager = {
       localStorage.removeItem(cacheKey)
       localStorage.removeItem(metaKey)
 
+      console.log(`🗑️ Cleared cache for ${folderPath}`)
     } catch (error) {
+      console.error(`❌ Error clearing cache for ${folderPath}:`, error)
     }
   },
 
@@ -196,7 +209,9 @@ const CacheManager = {
       }
 
       keysToRemove.forEach((key) => localStorage.removeItem(key))
+      console.log(`🗑️ Cleared ${keysToRemove.length} cache entries`)
     } catch (error) {
+      console.error("❌ Error clearing all caches:", error)
     }
   },
 
@@ -226,7 +241,11 @@ const CacheManager = {
       }
 
       keysToRemove.forEach((key) => localStorage.removeItem(key))
+      if (keysToRemove.length > 0) {
+        console.log(`🧹 Cleaned up ${keysToRemove.length} old cache entries`)
+      }
     } catch (error) {
+      console.error("❌ Error during cache cleanup:", error)
     }
   },
 
@@ -263,6 +282,7 @@ const CacheManager = {
         }
       }
     } catch (error) {
+      console.error("❌ Error getting cache stats:", error)
     }
 
     return stats
@@ -301,6 +321,12 @@ const isAvatarCreationPage = !!(
 const isVideoPage = window.location.pathname.includes("/aiovg_videos/")
 const isActivityPage = window.location.pathname.includes("/activities/")
 
+console.log("🔍 Page Detection:")
+console.log("Is Avatar Creation Page:", isAvatarCreationPage)
+console.log("Is Video Page:", isVideoPage)
+console.log("Is Activity Page:", isActivityPage)
+console.log("Current URL:", window.location.href)
+
 // Firebase app and services will be initialized after getting config from PHP
 let app = null
 let storage = null
@@ -325,6 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const defaultTab = document.querySelector(`.category-tab[data-category="${currentCategory}"]`)
     if (defaultTab) {
       defaultTab.classList.add("active")
+      console.log("🎯 Set default tab active on DOM ready:", currentCategory)
     }
   }, 100)
   
@@ -337,15 +364,21 @@ const initializeCache = () => {
   try {
     // Check if localStorage is available
     if (typeof(Storage) !== "undefined") {
+      console.log("✅ Browser cache is available")
       
       // Log current cache status
       const cacheStats = CacheManager.getCacheStats()
+      if (cacheStats.totalFolders > 0) {
+        console.log(`📦 Found existing cache with ${cacheStats.totalImages} images across ${cacheStats.totalFolders} folders`)
+      }
       
       return true
     } else {
+      console.warn("⚠️ Browser cache not available - will download assets every time")
       return false
     }
   } catch (error) {
+    console.error("❌ Error initializing cache:", error)
     return false
   }
 }
@@ -384,9 +417,16 @@ const languageModalContent = document.getElementById("languageModalContent")
 const closeLanguageModalBtn = document.getElementById("closeLanguageModalBtn")
 const languageOptionButtons = document.querySelectorAll(".language-option-button")
 
+console.log("🎯 DOM Elements Found:")
+console.log("messageContainer:", !!messageContainer)
+console.log("mainContainer:", !!mainContainer)
+console.log("avatarCharacterEl:", !!avatarCharacterEl)
+console.log("itemsContainer:", !!itemsContainer)
+
 // IMMEDIATE DISPLAY: Show main container right away to prevent blank screen
 if (mainContainer) {
   mainContainer.classList.add("show")
+  console.log("✅ Main container shown immediately on page load")
 }
 
 // Show initial loading state in items container
@@ -399,10 +439,12 @@ CacheManager.cleanupOldCaches()
 
 // Log cache statistics
 const cacheStats = CacheManager.getCacheStats()
+console.log("📊 Cache Statistics:", cacheStats)
 
 // MODIFIED: Function to get Firebase config from PHP with better error handling
 async function getFirebaseConfig() {
   try {
+    console.log("🔥 Fetching Firebase config from PHP...")
     const formData = new FormData()
     formData.append("action", "get_firebase_config")
     formData.append("ownerId", currentOwnerId || 0)
@@ -413,6 +455,7 @@ async function getFirebaseConfig() {
     })
 
     if (!response.ok) {
+      console.error("❌ HTTP Error:", response.status, response.statusText)
       return null
     }
 
@@ -421,15 +464,20 @@ async function getFirebaseConfig() {
     try {
       result = JSON.parse(responseText)
     } catch (parseError) {
+      console.error("❌ JSON Parse Error:", parseError)
+      console.error("❌ Response was not valid JSON. First 500 chars:", responseText.substring(0, 500))
       return null
     }
 
     if (result.success && result.config) {
+      console.log("✅ Firebase config received from PHP")
       return result.config
     } else {
+      console.error("❌ Failed to get Firebase config:", result.message)
       return null
     }
   } catch (error) {
+    console.error("❌ Error fetching Firebase config:", error)
     return null
   }
 }
@@ -439,15 +487,21 @@ async function initializeFirebase() {
   try {
     const firebaseConfig = await getFirebaseConfig()
     if (!firebaseConfig) {
+      console.error("❌ No Firebase config available")
       return false
     }
 
+    console.log("🔥 Initializing Firebase with config...")
     app = initializeApp(firebaseConfig)
     storage = getStorage(app)
     db = getFirestore(app)
 
+    console.log("✅ Firebase initialized successfully!")
+    console.log("✅ Firebase Storage connected!")
+    console.log("✅ Firebase Firestore connected!")
     return true
   } catch (error) {
+    console.error("❌ Error initializing Firebase:", error)
     return false
   }
 }
@@ -455,20 +509,28 @@ async function initializeFirebase() {
 // Function to fetch assets data from Firestore gamification database
 async function fetchAssetsFromFirestore() {
   if (!db) {
+    console.error("❌ Firestore not initialized")
     return
   }
 
   try {
+    console.log("🔍 Fetching assets data from Firestore...")
+    console.log("📍 Accessing path: gamification/assets")
+
     const assetsCollection = collection(db, "gamification", "assets")
     const assetsSnapshot = await getDocs(assetsCollection)
 
+    console.log("📊 Assets data from Firestore gamification database:")
     if (assetsSnapshot.empty) {
+      console.log("📭 No assets found in gamification/assets collection")
       return
     }
 
     const assetsData = []
     const pathsData = []
     const languagesData = []
+
+    console.log(`📦 Found ${assetsSnapshot.size} documents in assets collection`)
 
     assetsSnapshot.forEach((doc) => {
       const data = { id: doc.id, ...doc.data() }
@@ -482,6 +544,7 @@ async function fetchAssetsFromFirestore() {
           location: data.location || "unknown",
           name: data.name || "unknown",
         })
+        console.log(`🛤️ Path found: ${data.path} (Type: ${data.type}, Location: ${data.location})`)
       }
 
       if (data.language) {
@@ -491,8 +554,13 @@ async function fetchAssetsFromFirestore() {
           name: data.name || "unknown",
           path: data.path || "unknown",
         })
+        console.log(`🌐 Language found: ${data.language} (Name: ${data.name})`)
       }
+
+      console.log("📄 Complete asset document:", data)
     })
+
+    console.log(`✅ Successfully fetched ${assetsData.length} assets from Firestore gamification database`)
 
     const pathsByType = {}
     pathsData.forEach((item) => {
@@ -509,6 +577,9 @@ async function fetchAssetsFromFirestore() {
       }
       languageGroups[item.language].push(item)
     })
+
+    console.log("🗂️ Paths grouped by type:", pathsByType)
+    console.log("🌍 Assets grouped by language:", languageGroups)
 
     return {
       assets: assetsData,
@@ -644,6 +715,8 @@ function organizeBoughtItemsByCategory() {
       }
     })
   }
+
+  console.log("🗂️ Organized bought items by category:", boughtItemsWithCategories)
 }
 
 async function processPurchase(imageUrl, category) {
@@ -692,6 +765,7 @@ async function processPurchase(imageUrl, category) {
       return { success: false, message: result.message || "Purchase failed" }
     }
   } catch (error) {
+    console.error("Purchase error:", error)
     showNotification("Purchase failed", "error")
     return { success: false, message: "Purchase failed due to network error" }
   }
@@ -1111,6 +1185,8 @@ function showPurchaseConfirmationModal(imageUrl, category) {
       const purchaseResult = await processPurchase(imageUrl, category)
       if (purchaseResult.success) {
         showCongratulationsModal(imageUrl, category)
+      } else {
+        console.error("Purchase failed:", purchaseResult.message)
       }
     }, 300)
   })
@@ -1191,14 +1267,26 @@ async function log1080Activity() {
   const currentUrl = window.location.href
   const currentPath = window.location.pathname
 
+  console.log("=== 1080 ACTIVITY LOG CHECK ===")
+  console.log("Current URL:", currentUrl)
+  console.log("Current Path:", currentPath)
+
   // Check if URL contains /avatar-dress-up
   if (!currentPath.includes("/avatar-dress-up")) {
+    console.log("❌ URL does not contain '/avatar-dress-up' - skipping 1080 log")
     return
   }
 
+  console.log("✅ URL contains '/avatar-dress-up' - proceeding with 1080 log")
+
   if (!currentOwnerId) {
+    console.log("❌ Cannot log 1080 activity - No owner ID found")
     return
   }
+
+  console.log("🎯 Attempting to log 1080 activity...")
+  console.log("Owner ID:", currentOwnerId)
+  console.log("Current URL:", currentUrl)
 
   try {
     const formData = new FormData()
@@ -1212,9 +1300,312 @@ async function log1080Activity() {
     })
 
     const result = await response.json()
+    console.log("Server response:", result)
+
+    if (result.success) {
+      console.log("🎉 SUCCESS! 1080 activity logged!")
+      console.log("Web Activity ID:", result.web_activity_id)
+      console.log("Barcode:", result.barcode)
+      console.log("Message:", result.message)
+    } else {
+      console.log("❌ Failed to log 1080 activity")
+      console.log("Error message:", result.message)
+    }
   } catch (error) {
+    console.error("❌ Error occurred while logging 1080 activity:", error)
   }
+
+  console.log("=== END 1080 ACTIVITY LOG CHECK ===")
 }
+
+/*
+async function autoClaimActivityPoints() {
+  const currentPagePath = window.location.pathname
+  const currentUrl = window.location.href
+
+  console.log("=== ACTIVITY POINTS CHECK ===")
+  console.log("Current URL:", currentUrl)
+  console.log("Current Path:", currentPagePath)
+
+  if (
+    !currentPagePath.includes("/activities/") ||
+    currentPagePath === "/activities/color-colouring-pages/" ||
+    currentPagePath === "/activities/word-search/" ||
+    currentPagePath === "/activities/spot-the-difference/"
+  ) {
+    console.log("❌ URL is NOT valid for earning points - invalid /activities/ page or excluded path")
+    return
+  }
+
+  if (!isValidVideoPage()) {
+    console.log("❌ URL is NOT valid for earning points - page appears to be 404/not found")
+    return
+  }
+
+  console.log("✅ URL is VALID for earning points - contains '/activities/' and page exists")
+
+  if (!currentOwnerId) {
+    console.log("❌ Cannot claim points - No owner ID found")
+    console.log("Owner ID:", currentOwnerId)
+    return
+  }
+
+  if (!pageStartTime) {
+    pageStartTime = Date.now()
+    console.log("⏱️ Page timer started")
+  }
+
+  const timeOnPage = Date.now() - pageStartTime
+  if (timeOnPage < 5000) {
+    console.log(`⏳ Need to stay on page for ${Math.ceil((5000 - timeOnPage) / 1000)} more seconds before claiming`)
+    setTimeout(
+      () => {
+        autoClaimActivityPoints()
+      },
+      5000 - timeOnPage + 100,
+    )
+    return
+  }
+
+  console.log("🎯 Attempting to claim activity points...")
+  console.log("Owner ID:", currentOwnerId)
+  console.log("Activity URL:", currentUrl)
+  console.log(`⏱️ Time on page: ${Math.floor(timeOnPage / 1000)} seconds`)
+
+  try {
+    const formData = new FormData()
+    formData.append("action", "aiovg_claim_video_points")
+    formData.append("ownerId", currentOwnerId)
+    formData.append("videoUrl", currentUrl)
+
+    const response = await fetch(AJAX_URL, {
+      method: "POST",
+      body: formData,
+    })
+
+    const result = await response.json()
+    console.log("Server response:", result)
+
+    if (result.success) {
+      if (result.newPoints !== undefined) {
+        console.log("🎉 SUCCESS! Activity points earned!")
+        console.log("Previous points:", currentPoints)
+        console.log("New points:", result.newPoints)
+        console.log("Points earned:", result.newPoints - currentPoints)
+        console.log("Message:", result.message)
+
+        const pointsEarned = result.newPoints - currentPoints
+        currentPoints = result.newPoints
+      } else {
+        console.log("⚠️ No new points earned")
+        console.log("Message:", result.message)
+      }
+    } else {
+      console.log("❌ Failed to claim activity points")
+      console.log("Error message:", result.message)
+    }
+  } catch (error) {
+    console.error("❌ Error occurred while claiming activity points:", error)
+  }
+
+  console.log("=== END ACTIVITY POINTS CHECK ===")
+}
+*/
+
+/*
+async function autoClaimVideoPoints() {
+  const currentPagePath = window.location.pathname
+  const currentUrl = window.location.href
+
+  console.log("=== VIDEO POINTS CHECK ===")
+  console.log("Current URL:", currentUrl)
+  console.log("Current Path:", currentPagePath)
+
+  if (!currentPagePath.includes("/aiovg_videos/")) {
+    console.log("❌ URL is NOT valid for earning points - does not contain '/aiovg_videos/'")
+    console.log("Required pattern: URL must contain '/aiovg_videos/'")
+    return
+  }
+
+  if (!isValidVideoPage()) {
+    console.log("❌ URL is NOT valid for earning points - page appears to be 404/not found")
+    return
+  }
+
+  console.log("✅ URL is VALID for earning points - contains '/aiovg_videos/' and page exists")
+
+  if (!currentOwnerId) {
+    console.log("❌ Cannot claim points - No owner ID found")
+    console.log("Owner ID:", currentOwnerId)
+    return
+  }
+
+  if (!pageStartTime) {
+    pageStartTime = Date.now()
+    console.log("⏱️ Page timer started")
+  }
+
+  const timeOnPage = Date.now() - pageStartTime
+  if (timeOnPage < 5000) {
+    console.log(`⏳ Need to stay on page for ${Math.ceil((5000 - timeOnPage) / 1000)} more seconds before claiming`)
+    setTimeout(
+      () => {
+        autoClaimVideoPoints()
+      },
+      5000 - timeOnPage + 100,
+    )
+    return
+  }
+
+  console.log("🎯 Attempting to claim points...")
+  console.log("Owner ID:", currentOwnerId)
+  console.log("Video URL:", currentUrl)
+  console.log(`⏱️ Time on page: ${Math.floor(timeOnPage / 1000)} seconds`)
+
+  try {
+    const formData = new FormData()
+    formData.append("action", "aiovg_claim_video_points")
+    formData.append("ownerId", currentOwnerId)
+    formData.append("videoUrl", currentUrl)
+
+    const response = await fetch(AJAX_URL, {
+      method: "POST",
+      body: formData,
+    })
+
+    const result = await response.json()
+    console.log("Server response:", result)
+
+    if (result.success) {
+      if (result.newPoints !== undefined) {
+        console.log("🎉 SUCCESS! Points earned!")
+        console.log("Previous points:", currentPoints)
+        console.log("New points:", result.newPoints)
+        console.log("Points earned:", result.newPoints - currentPoints)
+        console.log("Message:", result.message)
+
+        const pointsEarned = result.newPoints - currentPoints
+        currentPoints = result.newPoints
+      } else {
+        console.log("⚠️ No new points earned")
+        console.log("Message:", result.message)
+      }
+    } else {
+      console.log("❌ Failed to claim points")
+      console.log("Error message:", result.message)
+    }
+  } catch (error) {
+    console.error("❌ Error occurred while claiming points:", error)
+  }
+
+  console.log("=== END VIDEO POINTS CHECK ===")
+}
+*/
+
+/*
+// Event listeners for download and quiz links (unchanged)
+document.addEventListener("DOMContentLoaded", () => {
+  const allLinks = document.querySelectorAll("a")
+  allLinks.forEach((link) => {
+    link.addEventListener("click", async () => {
+      const href = link.getAttribute("href") || ""
+      if (href.includes("/wp-content/uploads/")) {
+        console.log("✅ Download link clicked, preparing to send activity POST...")
+        let ownerId = "0"
+        if (typeof characterData === "object" && characterData.ownerId) {
+          ownerId = characterData.ownerId
+        } else {
+          console.warn("⚠️ Could not find ownerId from characterData")
+        }
+        const currentUrl = window.location.href
+        const AJAX_URL = window.PHPData?.ajaxUrl || "/wp-admin/admin-ajax.php"
+        console.log("Owner ID:", ownerId)
+        console.log("Current URL:", currentUrl)
+        console.log("AJAX URL:", AJAX_URL)
+        try {
+          const formData = new FormData()
+          formData.append("action", "aiovg_claim_video_points")
+          formData.append("ownerId", ownerId)
+          formData.append("videoUrl", currentUrl)
+          const response = await fetch(AJAX_URL, {
+            method: "POST",
+            body: formData,
+          })
+          const result = await response.json()
+          console.log("📥 Server response:", result)
+          if (result.success) {
+            if (result.newPoints !== undefined) {
+              const pointsEarned = result.newPoints - currentPoints
+              currentPoints = result.newPoints
+              console.log(`🎉 Points earned: +${pointsEarned}`)
+              console.log("Message:", result.message)
+            } else {
+              console.log("⚠️ No new points awarded:", result.message)
+            }
+          } else {
+            console.log("❌ Failed to claim activity points:", result.message)
+          }
+        } catch (error) {
+          console.error("❌ Error occurred while sending activity POST:", error)
+        }
+        console.log("=== END DOWNLOAD POINTS CLAIM ===")
+      }
+    })
+  })
+})
+*/
+
+/*
+document.addEventListener("DOMContentLoaded", () => {
+  const quizLink = document.querySelector('a.aiovg-link-title.lfk-activities-counter[data-title="Quiz"]')
+  if (quizLink) {
+    quizLink.addEventListener("click", async (event) => {
+      event.preventDefault()
+      console.log("✅ 'Quiz' link clicked, preparing to send activity POST...")
+      let ownerId = "0"
+      if (typeof characterData === "object" && characterData.ownerId) {
+        ownerId = characterData.ownerId
+      } else {
+        console.warn("⚠️ Could not find ownerId from characterData")
+      }
+      const currentUrl = window.location.href
+      const AJAX_URL = window.PHPData?.ajaxUrl || "/wp-admin/admin-ajax.php"
+      console.log("Owner ID:", ownerId)
+      console.log("Current URL:", currentUrl)
+      console.log("AJAX URL:", AJAX_URL)
+      try {
+        const formData = new FormData()
+        formData.append("action", "aiovg_claim_video_points")
+        formData.append("ownerId", ownerId)
+        formData.append("videoUrl", currentUrl)
+        const response = await fetch(AJAX_URL, {
+          method: "POST",
+          body: formData,
+        })
+        const result = await response.json()
+        console.log("📥 Server response:", result)
+        if (result.success) {
+          if (typeof result.newPoints !== "undefined") {
+            const pointsEarned = result.newPoints - (window.currentPoints || 0)
+            window.currentPoints = result.newPoints
+            console.log(`🎉 Points earned: +${pointsEarned}`)
+            console.log("Message:", result.message)
+          } else {
+            console.log("⚠️ No new points awarded:", result.message)
+          }
+        } else {
+          console.log("❌ Failed to claim activity points:", result.message)
+        }
+      } catch (error) {
+        console.error("❌ Error occurred while sending activity POST:", error)
+      }
+      console.log("=== END QUIZ POINTS CLAIM ===")
+    })
+  } else {
+    console.warn("⚠️ No 'Quiz' link found on this page.")
+  }
+})
+*/
 
 function displayUnlockedItemsCategory() {
   if (boughtItems.length === 0) {
@@ -1398,6 +1789,10 @@ async function initializeAppWithCharacterData() {
   currentOwnerId = phpData.ownerIdFromPHP || null
   characterData = phpData.characterDataFromPHP || null
 
+  console.log("🔧 Initializing app with character data...")
+  console.log("Owner ID:", currentOwnerId)
+  console.log("Character Data:", characterData)
+
   const firebaseInitialized = await initializeFirebase()
   if (firebaseInitialized) {
     await fetchAssetsFromFirestore()
@@ -1439,6 +1834,7 @@ async function initializeAppWithCharacterData() {
       })
     } else if (isAssetsLoaded) {
       // Assets already loaded, just display the default category
+      console.log("🎯 Assets already loaded - displaying default category:", currentCategory)
       organizeBoughtItemsByCategory()
       displayCategory(currentCategory)
     }
@@ -1477,6 +1873,8 @@ async function initializeAppWithCharacterData() {
       `
     }
 
+    console.log("No character found, but checking for video/activity page anyway...")
+
     // NEW: Still check for avatar-dress-up page even without character
     const currentPath = window.location.pathname
     if (currentPath.includes("/avatar-dress-up")) {
@@ -1503,9 +1901,12 @@ function updateUnlockedCount() {
 // MODIFIED: Enhanced loadImagesFromFolder with lazy loading and animations
 async function loadImagesFromFolder(folderPath, onItemLoaded = null) {
   try {
+    console.log(`🔍 Loading images from folder: ${folderPath}`)
+
     // Check cache first
     const cachedImages = CacheManager.getCachedImages(folderPath)
     if (cachedImages) {
+      console.log(`✅ Using cached images for ${folderPath}`)
       // Return cached items instantly (no animations for cached content)
       if (onItemLoaded) {
         cachedImages.forEach((url, index) => {
@@ -1515,6 +1916,7 @@ async function loadImagesFromFolder(folderPath, onItemLoaded = null) {
       return cachedImages
     }
 
+    console.log(`🌐 Fetching images from Firebase for ${folderPath}`)
     const folderRef = ref(storage, folderPath)
     const result = await listAll(folderRef)
     const urls = []
@@ -1536,6 +1938,7 @@ async function loadImagesFromFolder(folderPath, onItemLoaded = null) {
           
           return url
         } catch (error) {
+          console.error(`Failed to get download URL for ${itemRef.name}:`, error)
           return null
         }
       })
@@ -1553,10 +1956,12 @@ async function loadImagesFromFolder(folderPath, onItemLoaded = null) {
     // Cache the results
     if (urls.length > 0) {
       CacheManager.setCachedImages(folderPath, urls)
+      console.log(`💾 Cached ${urls.length} images for ${folderPath}`)
     }
 
     return urls
   } catch (error) {
+    console.error(`❌ Error loading images from ${folderPath}:`, error)
     return []
   }
 }
@@ -1564,11 +1969,14 @@ async function loadImagesFromFolder(folderPath, onItemLoaded = null) {
 // MODIFIED: Load specific category with lazy loading support
 async function loadCategoryImages(category, onItemLoaded = null) {
   if (!storage) {
+    console.error("❌ Firebase Storage not initialized")
     return []
   }
 
   const categoryFolders = categories[category] || [category]
   let categoryImages = []
+
+  console.log(`🚀 Loading images for category: ${category}`)
 
   try {
     // Load from assets folder
@@ -1586,6 +1994,7 @@ async function loadCategoryImages(category, onItemLoaded = null) {
           }
           allImages[folderName] = images
           categoryImages = categoryImages.concat(images)
+          console.log(`✅ Loaded ${images.length} images from ${folderPath}`)
         }
       }
     }
@@ -1604,6 +2013,7 @@ async function loadCategoryImages(category, onItemLoaded = null) {
           }
           allImages[folderName] = allImages[folderName].concat(images)
           categoryImages = categoryImages.concat(images)
+          console.log(`✅ Loaded ${images.length} images from ${folderName}`)
         }
       }
     }
@@ -1637,8 +2047,10 @@ async function loadCategoryImages(category, onItemLoaded = null) {
       }
     }
 
+    console.log(`✅ Category ${category} loaded with ${categoryImages.length} items`)
     return categoryImages
   } catch (error) {
+    console.error(`❌ Error loading category ${category}:`, error)
     return []
   }
 }
@@ -1646,10 +2058,13 @@ async function loadCategoryImages(category, onItemLoaded = null) {
 // MODIFIED: Simplified loadAllImages for background loading
 async function loadAllImages() {
   if (!storage) {
+    console.error("❌ Firebase Storage not initialized")
     return
   }
 
   try {
+    console.log("🚀 Starting to load all images in background...")
+
     // Load from assets folder
     const assetsRef = ref(storage, "assets")
     const assetsFolders = await listAll(assetsRef)
@@ -1660,6 +2075,7 @@ async function loadAllImages() {
       const images = await loadImagesFromFolder(folderPath)
       if (images.length > 0) {
         allImages[folderName] = images
+        console.log(`✅ Background loaded ${images.length} images from ${folderPath}`)
       }
     }
 
@@ -1676,6 +2092,7 @@ async function loadAllImages() {
             allImages[folderName] = []
           }
           allImages[folderName] = allImages[folderName].concat(images)
+          console.log(`✅ Background loaded ${images.length} images from ${folderName}`)
         }
       }
     }
@@ -1700,7 +2117,12 @@ async function loadAllImages() {
     isAssetsLoaded = true
     isLoading = false
 
+    console.log("✅ All background images loaded successfully!")
+    console.log("📊 Final image counts by folder:", 
+      Object.keys(allImages).map((key) => `${key}: ${allImages[key].length}`)
+    )
   } catch (error) {
+    console.error("❌ Error loading background images:", error)
     isLoading = false
   }
 }
@@ -1778,9 +2200,11 @@ function displayCategory(category) {
 
   if (hasAllImages && categoryImages.length > 0) {
     // Images are cached - display instantly without animations
+    console.log(`📦 Displaying ${categoryImages.length} cached items for ${category}`)
     displayCategoryItems(categoryImages, category, grid, false) // false = no animations for cached
   } else {
     // Images need to be loaded - show loading and add items with animations
+    console.log(`🌐 Loading ${category} category with lazy loading...`)
     
     // Load category with lazy loading and animations
     loadCategoryImages(category, (imageUrl, index, total, fromCache) => {
@@ -1795,6 +2219,7 @@ function displayCategory(category) {
         addItemToGrid(imageUrl, category, grid, !fromCache) // animate only if not from cache
       }, delay)
     }).then(() => {
+      console.log(`✅ ${category} category loading complete`)
     })
   }
 }
@@ -2108,6 +2533,7 @@ async function saveAvatar() {
       showNotification(result.message || "Save failed", "error")
     }
   } catch (error) {
+    console.error("Save error:", error)
     showNotification("Save failed", "error")
   }
 }
@@ -2153,6 +2579,7 @@ async function saveLanguage(languageCode) {
       showNotification(result.message || "Failed to save language", "error")
     }
   } catch (error) {
+    console.error("Save language error:", error)
     showNotification("Failed to save language", "error")
   }
 }
@@ -2172,6 +2599,7 @@ if (document.querySelectorAll(".category-tab").length > 0) {
   const defaultTab = document.querySelector(`.category-tab[data-category="${currentCategory}"]`)
   if (defaultTab) {
     defaultTab.classList.add("active")
+    console.log("🎯 Set default tab active:", currentCategory)
   }
 }
 
@@ -2210,9 +2638,11 @@ if (avatarSection && saveAvatarBtn) {
 window.CacheManager = CacheManager
 window.clearImageCache = () => {
   CacheManager.clearAllCaches()
+  console.log("🗑️ All image caches cleared!")
 }
 window.getCacheStats = () => {
   const stats = CacheManager.getCacheStats()
+  console.log("📊 Cache Statistics:", stats)
   return stats
 }
 
@@ -2222,17 +2652,17 @@ window.getCacheStats = () => {
 initializeAppWithCharacterData()
 
 const HAT_LAYERS = [
-  "Wzard%/images/Hat.jpg",
+  "Wzard%20Ht.png",
   "Party%20Hat%20(3).png",
-  "/images/Chefs.jpg",
-  "Fire%/images/Hats.jpg"
+  "Chefs.png",
+  "Fire%20Fighter.png"
 ];
 
 function elevateHats() {
   HAT_LAYERS.forEach(hat => {
     const hatImg = document.querySelector(`img[data-character-layer="selectedHeadUrl"][src*="${hat}"]`);
     if (hatImg) {
-      let marginTop = (hat === "Wzard%/images/Hat.jpg") ? "-65px" : "-35px";
+      let marginTop = (hat === "Wzard%20Ht.png") ? "-65px" : "-35px";
       hatImg.style.setProperty("margin-top", marginTop, "important");
     }
   });
