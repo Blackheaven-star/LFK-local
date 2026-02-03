@@ -1,0 +1,145 @@
+.sidebar {
+	line-height: 1.6em;
+	font-size: 16px;
+}
+
+.sidebar .links li
+{
+	margin: 0 0 8px 0;
+}
+
+.sidebar .logged-in-details .details .item a:hover
+{
+	color: #f90;
+}
+
+/* 
+	----------------------------------------------------------------
+	Staff logged in details
+	----------------------------------------------------------------
+*/
+
+.logged-in-details {
+	background: #efefef;
+	border-radius: 5px;	
+	overflow: hidden;
+	margin: 0 0 30px 0;
+} 
+
+.logged-in-details .label {
+	background: #ffffff;
+	padding: 8px 12px 6px 12px;
+	font-weight: 500;
+}
+
+.logged-in-details .details {
+	padding: 10px 12px;
+}
+
+.logged-in-details .details .item,
+.logged-in-details .details .item a {
+    display: flex;
+    align-items: center; 
+    gap: 8px;	
+}
+
+.logged-in-details .details  .item a:hover {
+	color: #f90;
+}
+
+/* 
+	----------------------------------------------------------------
+	MARC records table
+	----------------------------------------------------------------
+*/
+
+.marc-records-table {
+	border-collapse: collapse;
+}
+
+.marc-records-table tr th,
+.marc-records-table tr td {
+	text-align: left;
+	border: 1px solid #ccc;
+	padding: 10px 25px;
+	font-weight: 500;
+	white-space: nowrap;
+}
+
+.marc-records-table tr th {
+	font-size: 18px;
+	line-height: 1.4em;
+	background: #efefef;
+}
+
+.marc-records-table tr td a {
+	text-decoration: underline;
+}
+
+.marc-records-table tr td a:hover {
+	color: #f90;
+}
+
+/* 
+	----------------------------------------------------------------
+	Language breakdown
+	----------------------------------------------------------------
+*/
+
+.breakdown-wrap {
+
+}
+
+.breakdown-wrap .summary {
+	font-size: 18px;
+	font-weight: 500;
+	margin: 0 0 10px 0;
+}
+
+.breakdown-wrap .summary .total-titles {
+	float: left;
+}
+
+.breakdown-wrap .summary .most-recent {
+	float: right;
+}
+
+.breakdown-wrap .summary .total-titles span,
+.breakdown-wrap .summary .most-recent span {
+	color: #f90;
+	font-weight: 500;
+}
+
+.breakdown-table {
+	border-collapse: collapse;
+}
+
+.breakdown-table tr th,
+.breakdown-table tr td {
+	text-align: left;
+	border: 1px solid #ccc;
+	padding: 10px 25px;
+	font-weight: 500;
+	white-space: nowrap;
+}
+
+.breakdown-table tr td.title img {
+    width: 40px;
+    display: inline-block;
+    margin: 0px 5px -10px 0;
+}
+
+.breakdown-table tr th.book-count,
+.breakdown-table tr td.book-count {
+	text-align: center;
+}
+
+.breakdown-table tr td.title a:hover {
+	color: #f90;
+}
+
+.breakdown-table tr th {
+	font-size: 18px;
+	line-height: 1.4em;
+	background: #efefef;
+}
