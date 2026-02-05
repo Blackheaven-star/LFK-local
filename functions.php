@@ -121,7 +121,6 @@ function l4k_loadScripts() {
     if (is_page_template('page-templates/page-find-library.php'))           { wp_enqueue_script('home', get_stylesheet_directory_uri() . '/assets/js/find-library.js', ['jquery'], $assetVersion, true); }
     if (is_page_template('page-templates/page-faqs.php'))                   { wp_enqueue_script('faq', get_stylesheet_directory_uri() . '/assets/js/faq.js', ['jquery'], $assetVersion, true); }
     if (is_page_template('page-templates/page-member-home.php'))            { wp_enqueue_script('member-home', get_stylesheet_directory_uri() . '/assets/js/member-home.js', ['jquery'], $assetVersion, true); }
-    if (is_page_template('page-templates/page-avatar.php'))		            { wp_enqueue_script('avatar', get_stylesheet_directory_uri() . '/assets/js/avatar.js', ['jquery'], $assetVersion, true); }
     if (is_page_template('page-templates/page-available-languages.php'))    { wp_enqueue_script('member-home', get_stylesheet_directory_uri() . '/assets/js/member-home.js', ['jquery'], $assetVersion, true); }
 
 	if (is_front_page() || is_page_template('page-templates/page-find-library.php')) { 
